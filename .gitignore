@@ -1,0 +1,6 @@
+# Montage videos are uploaded to GitHub's CDN via drag-and-drop (README editor),
+# not committed to the repo. Keep the repo lightweight.
+asserts/grid_*.mp4
+
+# ffmpeg 2-pass logs
+ffmpeg2pass-*.log*
