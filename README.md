@@ -8,7 +8,8 @@ PixWorld: Unifying 3D Scene Generation and Reconstruction in Pixel Space</h1>
 
 <a href="https://sensengao.github.io/PixWorld/"><img src="https://img.shields.io/badge/Project_Page-yellowgreen" alt="Project Page"></a>
 <a href="https://arxiv.org/abs/2607.05373"><img src="https://img.shields.io/badge/arXiv-2607.05373-b31b1b" alt="arXiv"></a>
-<a href="#-todo"><img src="https://img.shields.io/badge/Weights-PixWorld--480P--4steps_coming_soon-blue" alt="Weights"></a>
+<a href="https://huggingface.co/datasets/Sensen02/NVS-Refined"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-NVS--Refined-ff9800" alt="Dataset"></a>
+<a href="#-release-plan"><img src="https://img.shields.io/badge/Weights-PixWorld--480P--4steps_in_a_short_time-blue" alt="Weights"></a>
 
 <p align="center">
   <a href="https://sensengao.github.io/PixWorld/">
@@ -54,12 +55,22 @@ A **single** PixWorld model performs both 3D reconstruction and generation. Afte
   <img src="./asserts/Speed.png" alt="PixWorld inference speed comparison" width="78%">
 </p>
 
+## 📦 Dataset: NVS-Refined
+
+We release **[NVS-Refined](https://huggingface.co/datasets/Sensen02/NVS-Refined)** 🤗 — a curated, high-quality dataset for novel view synthesis, distilled from **RealEstate10K, ACID, DL3DV, and SpatialVid**. From these sources we keep only the clips that are:
+
+- **🔍 Sharp & high-fidelity** — visually clean frames, with blurry and heavily-compressed sequences filtered out.
+- **🎥 Large in camera motion** — sequences with substantial pose variation, so the data genuinely stresses view synthesis and 3D geometry.
+- **🎨 High in aesthetic quality** — scored and filtered for visual appeal.
+
+For clips that are otherwise valuable but **noticeably blurry**, instead of discarding them we restore them with **Streaming FlashVSR** (streaming video super-resolution), recovering usable high-resolution detail.
+
+👉 **[huggingface.co/datasets/Sensen02/NVS-Refined](https://huggingface.co/datasets/Sensen02/NVS-Refined)**
+
 ## 🗓️ Release Plan
 
-We plan to release the following **in a short time**:
-
-- [ ] 🧹 **Cleaned RealEstate10K / DL3DV / ACID datasets**
-- [ ] ⚡ **`PixWorld-480P-4steps` distilled model** — the 4-step distilled weights + inference code.
+- [x] 📦 **[NVS-Refined dataset](https://huggingface.co/datasets/Sensen02/NVS-Refined)** — released on Hugging Face 🤗
+- [ ] ⚡ **`PixWorld-480P-4steps` distilled model** — the 4-step distilled weights + inference code, coming **in a short time**. Stay tuned!
 
 ## 🎓 Citation
 
