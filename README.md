@@ -13,7 +13,7 @@ PixWorld: Unifying 3D Scene Generation and Reconstruction in Pixel Space</h1>
 
 <p align="center">
   <a href="https://sensengao.github.io/PixWorld/">
-    <img src="./asserts/Teaser_top.png" alt="PixWorld teaser" width="100%">
+    <img src="./assets/Teaser_top.png" alt="PixWorld teaser" width="100%">
   </a>
 </p>
 
@@ -52,7 +52,7 @@ https://github.com/user-attachments/assets/5353d7bf-5de3-4a3c-9b56-c49ca3db87ff
 A **single** PixWorld model performs both 3D reconstruction and generation. After distillation, the **4-step** model (`PixWorld-480P-4steps`) generates a scene in **~0.6 s** — up to **~1000×** faster than diffusion-based world generators (FantasyWorld 1041×, Gen3C 445×, Gen3R 148×, FlashWorld 5×).
 
 <p align="center">
-  <img src="./asserts/Speed.png" alt="PixWorld inference speed comparison" width="78%">
+  <img src="./assets/Speed.png" alt="PixWorld inference speed comparison" width="78%">
 </p>
 
 ## 📦 Dataset: NVS-Refined
