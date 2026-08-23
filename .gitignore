@@ -1,0 +1,18 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# weights, data, runs, outputs
+weights/
+data/
+runs/
+out/
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+
+# large artifacts
+*.npz
+wandb/

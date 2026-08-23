@@ -1,0 +1,56 @@
+{
+ "t2mv_living_room": {
+  "task": "t2mv",
+  "style": "indoor · room",
+  "views": 16,
+  "cameras": "poses/t2mv_living_room.json",
+  "seed": 1001,
+  "prompt": "The video showcases a cozy indoor living room with neutral-toned walls and polished wooden flooring. A beige sofa with a white throw blanket sits centrally, facing a white fireplace adorned with a colorful floral painting and two white decorative pillars. To the left of the fireplace, a wooden chair with a yellow cushion and a small potted plant are positioned. A patterned rug covers the floor in front of the sofa and fireplace. A single beige armchair is placed near a black bookshelf filled with books, against the wall with three windows featuring white blinds. The lighting is bright, with recessed ceiling lights, creating a warm and inviting atmosphere."
+ },
+ "t2mv_ridge": {
+  "task": "t2mv",
+  "style": "outdoor · mountain ridge at sunset",
+  "views": 16,
+  "cameras": "poses/t2mv_ridge.json",
+  "seed": 1033,
+  "prompt": "The video presents a natural landscape at sunset, featuring a rocky hilltop with a small structure, likely a lighthouse, perched at its peak. The hill is surrounded by sparse vegetation and rugged terrain, extending towards a calm body of water with distant rocky islands. The sky is partly cloudy, bathed in warm golden-hour light, casting a serene and tranquil mood over the scene. The lighting enhances the earthy tones of the landscape, creating a picturesque and peaceful atmosphere."
+ },
+ "i2mv_bedroom": {
+  "task": "i2mv",
+  "style": "indoor · room",
+  "views": 16,
+  "cameras": "poses/i2mv_bedroom.json",
+  "seed": 1000,
+  "prompt": "The video presents a well - lit bedroom with light - colored walls and a carpeted floor. A black metal bed with white bedding, pink throws, and striped pillows is the centerpiece. Two bedside tables with lamps sit on either side of the bed, and a framed artwork hangs above the headboard. As the view shifts, a doorway reveals an adjacent room with a chair, a small table, and framed pictures on the wall. The atmosphere is calm and cozy, with natural light coming through the windows, creating a peaceful indoor setting.",
+  "reference": "i2mv_bedroom/reference.jpg",
+  "note": "the reference is view 0 of the trajectory: the model pins it as the clean first frame, and the cameras are rooted there"
+ },
+ "i2mv_mountains": {
+  "task": "i2mv",
+  "style": "outdoor · mountains and a fjord",
+  "views": 16,
+  "cameras": "poses/i2mv_mountains.json",
+  "seed": 1056,
+  "prompt": "The video showcases a natural landscape featuring a series of green, tiered mountains along a coastline. The mountains have distinct, sloped ridges with patches of grass and exposed rock. The ocean is calm, with circular aquaculture structures visible on the water’s surface. Distant mountainous islands rise under an overcast sky, creating a moody, serene atmosphere. The scene emphasizes the rugged, natural beauty of the coastal terrain, with no human or animal activity visible, focusing solely on the static yet striking geological formations and the tranquil sea.",
+  "reference": "i2mv_mountains/reference.jpg",
+  "note": "the reference is view 0 of the trajectory: the model pins it as the clean first frame, and the cameras are rooted there"
+ },
+ "recon_bedroom": {
+  "task": "reconstruction",
+  "views": 16,
+  "style": "indoor · room",
+  "cameras": "recon_bedroom/cameras.json",
+  "images": "recon_bedroom/views/",
+  "source": "RealEstate10K validation split",
+  "note": "one forward pass at sigma=0 -- no sampler, no guidance, no step count, and no prompt: the views determine the output"
+ },
+ "recon_coast": {
+  "task": "reconstruction",
+  "views": 16,
+  "style": "outdoor · coastline",
+  "cameras": "recon_coast/cameras.json",
+  "images": "recon_coast/views/",
+  "source": "ACID validation split",
+  "note": "one forward pass at sigma=0 -- no sampler, no guidance, no step count, and no prompt: the views determine the output"
+ }
+}

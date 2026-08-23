@@ -1,0 +1,20 @@
+# PixWorld -- inference only. A smaller set: no LPIPS, no wandb, no dataset tooling.
+#
+# Install torch first, matched to your CUDA:
+#   pip install torch==2.6.0 torchvision --index-url https://download.pytorch.org/whl/cu124
+#   pip install -r infer/requirements.txt
+
+diffusers>=0.33.1
+transformers>=4.45.0
+accelerate>=0.33.0
+safetensors
+sentencepiece
+ftfy
+einops
+numpy<2
+gsplat>=1.5.0
+ninja
+pillow
+imageio[ffmpeg]
+huggingface_hub            # the Wan2.2 text encoder
+modelscope                 # downloading the PixWorld weights

@@ -1,0 +1,34 @@
+# PixWorld -- training and inference.
+#
+# Verified on: torch 2.6.0+cu124, diffusers 0.36.0, transformers 4.57.3, gsplat 1.5.3,
+# CUDA 12.4, Python 3.10, A100-80GB.
+#
+# Install torch FIRST, matched to your CUDA, then this file:
+#   pip install torch==2.6.0 torchvision --index-url https://download.pytorch.org/whl/cu124
+#   pip install -r requirements.txt
+
+# --- core ---
+diffusers>=0.33.1          # WanTransformer3DModel, prompt_clean
+transformers>=4.45.0       # AutoTokenizer + UMT5EncoderModel for the Wan text encoder
+accelerate>=0.33.0
+safetensors
+sentencepiece              # the UMT5 tokenizer
+ftfy                       # a hard runtime dependency of diffusers' prompt_clean
+einops
+numpy<2
+
+# --- 3D Gaussian rendering ---
+# gsplat JIT-compiles its CUDA extension on the first render, so ninja is required and
+# TORCH_CUDA_ARCH_LIST should match your GPU (8.0 A100 / 8.6 A6000 / 9.0 H100).
+gsplat>=1.5.0
+ninja
+
+# --- losses and data ---
+lpips                      # VGG perceptual loss
+pillow
+imageio[ffmpeg]            # sample videos
+
+# --- optional ---
+wandb                      # metrics; only used with --wandb 1
+huggingface_hub            # downloading the Wan2.2 weights
+modelscope                 # downloading the PixWorld weights

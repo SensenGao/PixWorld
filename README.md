@@ -6,10 +6,11 @@ PixWorld: Unifying 3D Scene Generation and Reconstruction in Pixel Space</h1>
 
 <sup>1</sup> Nanyang Technological University &nbsp;&nbsp; <sup>2</sup> AISphere &nbsp;&nbsp;|&nbsp;&nbsp; \* Co-first authors &nbsp;&nbsp; 📧 Corresponding author
 
-<a href="https://sensengao.github.io/PixWorld/"><img src="https://img.shields.io/badge/Project_Page-yellowgreen" alt="Project Page"></a>
 <a href="https://arxiv.org/abs/2607.05373"><img src="https://img.shields.io/badge/arXiv-2607.05373-b31b1b" alt="arXiv"></a>
+<a href="https://sensengao.github.io/PixWorld/"><img src="https://img.shields.io/badge/Project_Page-yellowgreen" alt="Project Page"></a>
+<a href="https://github.com/SensenGao/PixWorld"><img src="https://img.shields.io/badge/GitHub-Code-181717?logo=github" alt="Code"></a>
+<a href="https://www.modelscope.cn/models/SensenGao/PixWorld"><img src="https://img.shields.io/badge/ModelScope-Weights-624aff" alt="Weights"></a>
 <a href="https://huggingface.co/datasets/Sensen02/NVS-Refined"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-NVS--Refined-ff9800" alt="Dataset"></a>
-<a href="#-release-plan"><img src="https://img.shields.io/badge/Weights-PixWorld--480P--4steps_in_a_short_time-blue" alt="Weights"></a>
 
 <p align="center">
   <a href="https://sensengao.github.io/PixWorld/">
@@ -21,6 +22,10 @@ PixWorld: Unifying 3D Scene Generation and Reconstruction in Pixel Space</h1>
 <strong>TL;DR</strong>: <strong>PixWorld is a single end-to-end pixel-space diffusion model that unifies 3D scene generation and reconstruction</strong> — it supervises a pixel-aligned 3D Gaussian field directly through differentiable rendering, with no VAE or RAE, and adds a geometry perception loss for 3D structural consistency.
 </p>
 
+<p align="left">
+<strong>Training code</strong> is in <a href="train/"><code>train/</code></a>, <strong>inference code</strong> in <a href="infer/"><code>infer/</code></a>, and the <strong>weights</strong> are on <a href="https://www.modelscope.cn/models/SensenGao/PixWorld">ModelScope</a>.
+</p>
+
 </div>
 
 ## ✨ Contributions
@@ -28,7 +33,6 @@ PixWorld: Unifying 3D Scene Generation and Reconstruction in Pixel Space</h1>
 - **One unified model for generation *and* reconstruction.** A single two-stream diffusion transformer processes posed multi-view inputs as a **clean** subset (→ reconstruction) and a **noisy** subset (→ generation, optionally text-conditioned), decoding a pixel-aligned 3D Gaussian scene in **one forward pass** — no task-specific branches.
 - **Pixel-space supervision, no VAE/RAE.** A **flow-matching loss is imposed directly on rendered multi-view images** via differentiable rendering, so optimization is aligned with 3D scene fidelity instead of an intermediate latent target — removing the frozen VAE/RAE and its reconstruction ceiling.
 - **Geometry perception loss.** Rendered views are aligned with ground truth in the geometry-aware feature space of a **frozen 3D foundation model (π³ / VGGT)**, injecting 3D structural supervision beyond 2D photometric and perceptual losses.
-- **Real-time inference.** After distillation, the **4-step** model (`PixWorld-480P-4steps`) generates a scene in **~0.6 s** — up to **~1000×** faster than diffusion-based world generators.
 
 ## 🎬 Showcase
 
@@ -47,13 +51,78 @@ https://github.com/user-attachments/assets/b1e681f6-d3e3-4703-87fe-90a3d9f5c922
 
 https://github.com/user-attachments/assets/5353d7bf-5de3-4a3c-9b56-c49ca3db87ff
 
-## ⚡ Inference Speed
+## 🚀 Code
 
-A **single** PixWorld model performs both 3D reconstruction and generation. After distillation, the **4-step** model (`PixWorld-480P-4steps`) generates a scene in **~0.6 s** — up to **~1000×** faster than diffusion-based world generators (FantasyWorld 1041×, Gen3C 445×, Gen3R 148×, FlashWorld 5×).
+This repository contains the full training and inference code.
 
-<p align="center">
-  <img src="./assets/Speed.png" alt="PixWorld inference speed comparison" width="78%">
-</p>
+| | what it is |
+|---|---|
+| **[`train/`](train/)** | two-stage training — fine-tune Wan2.2-TI2V-5B into a pixel-space 3D generator, then distil it to 4 steps. [Guide →](train/README.md) |
+| **[`infer/`](infer/)** | text → 3D, image → 3D, and reconstruction from posed views. [Guide →](infer/README.md) |
+
+Each directory is **self-contained** — the model, renderer, schedules and everything else
+they need live under it, with no imports from anywhere outside. See also
+[installation](INSTALL.md) and the [dataset format](train/DATASET.md).
+
+> **Note.** The released 5B model is converted from **Wan2.2-TI2V-5B**, not the
+> train-from-scratch model the paper reports, so the paper's numbers do not describe it.
+
+### Weights
+
+On ModelScope at **[SensenGao/PixWorld](https://www.modelscope.cn/models/SensenGao/PixWorld)**:
+`PixWorld-L2P-Wan5B` (50-step) and `PixWorld-L2P-Wan5B-4steps` (4-step). Each `.safetensors`
+sits beside a `config.json` that `infer.py` reads, so keep the two together.
+
+```bash
+export PIXWORLD=$(python -c "from modelscope import snapshot_download; print(snapshot_download('SensenGao/PixWorld'))")
+export FEW=$PIXWORLD/PixWorld-L2P-Wan5B-4steps/PixWorld-L2P-Wan5B-4steps.safetensors
+```
+
+### Quick start
+
+```bash
+pip install torch==2.6.0 torchvision --index-url https://download.pytorch.org/whl/cu124
+pip install -r infer/requirements.txt
+
+# the Wan2.2 checkout is needed for its UMT5 text encoder
+huggingface-cli download Wan-AI/Wan2.2-TI2V-5B-Diffusers \
+    --local-dir weights/Wan2.2-TI2V-5B-Diffusers
+
+# text + a camera path -> an explorable 3D Gaussian scene
+python infer/infer.py \
+    --ckpt $FEW \
+    --wan_path weights/Wan2.2-TI2V-5B-Diffusers \
+    --cameras infer/examples/poses/t2mv_living_room.json \
+    --prompt "a cozy living room with a stone fireplace and a leather sofa" \
+    --out out/livingroom
+```
+
+You get the generated views, a video rendered from the Gaussian field along the camera path
+(`--video_frames 81`, `--video_round_trip` to fly out and back), and `scene.ply` — which
+opens in any 3D Gaussian Splatting viewer.
+
+A **camera path** is always required. `infer/examples/poses/` ships real ones taken from the
+footage the model was trained on; `--trajectory {dolly,orbit,pan,spiral}` synthesises one
+instead.
+
+### Training
+
+```bash
+DATA_ROOT=data/mine bash train/train_l2p.sh                              # stage 1, 50k steps
+TEACHER=runs/l2p/model_step50000.pt bash train/train_dmd2.sh             # stage 2, 10k steps
+```
+
+Both launchers are plain `torchrun` and scale to multiple nodes with `NNODES` / `NODE_RANK`
+/ `MASTER_ADDR`. Every hyper-parameter is an environment variable carrying the published
+default. See the [training guide](train/README.md) for what each one does.
+
+Bring your own data in a plain local format — one JSON Lines index plus image folders, no
+database and no object store. See the [dataset format](train/DATASET.md).
+
+The **geometry perception loss** is implemented for both π³ and VGGT and is **off by
+default** (`GEO_LOSS=none`): it needs one of those backbones cloned and its weights
+fetched. Turn it on with
+`GEO_LOSS=pi3` or `GEO_LOSS=vggt` — [details](train/README.md#the-geometry-perception-loss-optional-off-by-default).
 
 ## 📦 Dataset: NVS-Refined
 
@@ -70,7 +139,9 @@ For clips that are otherwise valuable but **noticeably blurry**, instead of disc
 ## 🗓️ Release Plan
 
 - [x] 📦 **[NVS-Refined dataset](https://huggingface.co/datasets/Sensen02/NVS-Refined)** — released on Hugging Face 🤗
-- [ ] ⚡ **`PixWorld-480P-4steps` distilled model** — the 4-step distilled weights + inference code, coming **in a short time**. Stay tuned!
+- [x] 🧑‍💻 **Training code** — both stages, [`train/`](train/)
+- [x] 🎥 **Inference code** — [`infer/`](infer/)
+- [x] ⚡ **Weights** — both checkpoints on [ModelScope](https://www.modelscope.cn/models/SensenGao/PixWorld)
 
 ## 🎓 Citation
 
